@@ -10,8 +10,6 @@
 #  define BUFFER_SIZE 17
 # endif
 
-# define BUF_S BUFFER_SIZE
-
 # ifndef NEW_LINE
 #  define NEW_LINE '\n'
 # endif
@@ -22,12 +20,18 @@
 
 typedef struct  s_file 
 {
-	char    *b;
 	char	*l;
+	char	*b;
 	int     fd;
-	int		b_read;
 	int     i;
+	int		ini;
 }	t_file;
+
+typedef struct	s_node
+{
+	t_file	*file;
+	t_file	*next;	
+}	t_node;
 
 char	*get_next_line(int fd);
 

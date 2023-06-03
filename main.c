@@ -14,8 +14,8 @@ int	main(void)
 	while (i < 10)
 	{
 		line = get_next_line(fd);
-//		if (!line)
-//			break ;
+		if (!line)
+			break ;
 		printf("%s'.' %c", line, NEW_LINE);
 		free(line);
 		i ++;
