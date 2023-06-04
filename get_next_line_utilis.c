@@ -1,19 +1,14 @@
 #include "get_next_line.h"
 
-char	*ft_strchr(char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	if (!s)
-		s = malloc (1);
-	if (!s)
-		return (NULL);
-	s[0] = 0;
 	while (*s && *s != (unsigned char)c)
 	{
 		if (*(s + 1) == '\0')
 		{
 			if (((unsigned char)c) == '\0')
 				return ((char *)s + 1);
-			return ((void *)0);
+			return (NULL);
 		}
 		s++;
 	}

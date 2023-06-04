@@ -14,8 +14,7 @@ static char	*gnl_read(int fd, char **raw)
 	char	*buf;
 	char	*tmp;
 	int		b_read;
-	printf ("read raw ini : %s '.'\n", *raw);
-	
+
 	buf = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (gnl_free_null(raw, raw));
@@ -23,24 +22,19 @@ static char	*gnl_read(int fd, char **raw)
 	while (1)
 	{
 		b_read = read(fd, buf, BUFFER_SIZE);
-		printf ("read LOOP BUF : %s '.'\n", buf);
-
 		if (b_read == -1)
 		{
 			return (gnl_free_null(&buf, raw));
 		}	
 		buf[b_read] = 0;
-		tmp = *raw;
-		*raw = ft_strjoin(tmp, buf);
-		printf ("read strjoin NEW raw : %s\n", *raw);
-		if (!*raw)
+		tmp = (*raw);
+		(*raw) = ft_strjoin(tmp, buf);
+		if (!(*raw))
 			return (gnl_free_null(&buf, &tmp));
-		if (ft_strchr(*raw, NL) && !gnl_free_null(&buf, &tmp))
+		if (ft_strchr((*raw), NL) && !gnl_free_null(&buf, &tmp))
 			break ;
 		free(tmp);	
 	}
-	printf ("read OUT RAW NL : %s'.'\n", ft_strchr(*raw, NL));
-	printf ("read -- raw : %s\n", *raw);
 	return (*raw);	
 }
 
@@ -86,9 +80,7 @@ char    *get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	printf ("gnl\n");
 	gnl_read(fd, &raw);
-	printf ("==== gnl raw : %s'.'\n", raw);
 	gnl_get(raw, &line);
 	if (gnl_clean(&raw))
 		return (line);
