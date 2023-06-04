@@ -6,24 +6,27 @@ int	main(void)
 {
 	int		fd;
 	char	*line;
-	char	str[22] = {'H', 'e', 'l', 'l', 'o', NULL_END, 32, 'w', 'o', 'r', 'l', 'd', '!', NEW_LINE, NULL_END};
+	char	str[22] = {'H', 'e', 'l', 'l', 'o', '\n', 32, 'w', 'o', 'r', 'l', 'd', '!', '\n', 0};
 	int		i;
 
+	line = str;
 	i = 0;
 	fd = open("test.txt", O_RDONLY);
-	while (i < 10)
+	while (line)
 	{
 		line = get_next_line(fd);
 		if (!line)
+		{
 			break ;
-		printf("%s'.' %c", line, NEW_LINE);
+		}
+		printf("%s'.' %c", line, '\n');
 		free(line);
 		i ++;
 	}
 	close(fd);
 	if (fd == -1)
 	{
-		printf ("Error de lectura de archivo%c", NEW_LINE); 
+		printf ("Error de lectura de archivo%c", '\n'); 
 		return (1);
 	}
 	return (0);
