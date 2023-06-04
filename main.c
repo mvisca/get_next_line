@@ -14,12 +14,13 @@ int	main(void)
 	fd = open("test.txt", O_RDONLY);
 	while (i < 20)
 	{
+		printf ("main -- i : %d \n", i);
 		line = get_next_line(fd);
 		if (!line)
 		{
 			break ;
 		}
-		printf("%s'.' %c", line, '\n');
+		printf("\n === %s'.' ===\n\n", line);
 		free(line);
 		i ++;
 	}
