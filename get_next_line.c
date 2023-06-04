@@ -1,61 +1,87 @@
 #include "get_next_line.h"
 
-static char	*str_join_move_free(char *line, char **buffer, int *i)
+static char	*gnl_free_null(char **b, char **l)
 {
-	char	*tmp;
-	char	*new;
+	free(*b);
+	*b = NULL;
+	free(*l);
+	*l = NULL;
+	return (NULL);
+}
 
-	tmp = line; 						// bkp de line
-	new = ft_substr(*buffer, 0, *i); 	// tomo de buffer desde inicio hasta aparicion de \n
-	line = ft_strjoin(line, new);		// line es line + new, vacion la memoria del viejo line
-	if (!new || !line)
+static char	*gnl_read(int fd, char **raw)
+{
+	char	*buf;
+	char	*tmp;
+	int		b_read;
+		
+	if (!ft_strchr(*raw, NL))
 	{
-		free(new);
-		free(line);
-		return (NULL);
+		buf = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
+		if (!buf)
+			return (gnl_free_null(raw, raw));
+		while (1)
+		{
+			b_read = read(fd, buf, BUFFER_SIZE);
+			if (b_read == -1)
+				return (gnl_free_null(&buf, raw));
+			buf[b_read] = 0;
+			tmp = *raw;
+			*raw = ft_strjoin(tmp, buf);
+			if (!*raw)
+				return (gnl_free_null(&buf, &tmp));
+			if (ft_strchr(*raw, NL) && !gnl_free_null(&buf, &tmp))
+				break ;
+			free(tmp);
+		}
 	}
-	(*i)++;
-	ft_memmove(*buffer, &(*buffer)[(*i)], (BUFFER_SIZE - *i));
-	*i = BUFFER_SIZE - *i;				// actualizo valor de i a total del buffer menos el largo del stringo bueno cogido
-	free(tmp);							// vacion tmp
-	return (line);	
+	return (*raw);	
+}
+
+static char	*gnl_get(char *raw, char **line)
+{
+	int		line_break;
+
+	line_break = 0;
+	while(raw[line_break] && raw[line_break] != NL)
+		line_break++;
+	if (ft_strchr(raw, NL))
+	{
+		*line = ft_substr(raw, 0, line_break);
+		if (!*line)
+			return (gnl_free_null(&raw, &raw));
+	}
+	return (*line);
+}
+
+static char	*gnl_clean(char **raw)
+{
+	int		next_line_len;
+	int		extra_line_len;
+	char	*new_raw;
+
+	next_line_len = 0;
+	extra_line_len = 0;
+	while ((*raw)[next_line_len] && (*raw)[next_line_len] != NL)
+		next_line_len++;
+	while ((*raw)[next_line_len + extra_line_len] + 1) 
+		extra_line_len++;
+	new_raw = ft_substr(*raw, next_line_len + 1, extra_line_len);
+	free(*raw);
+	*raw = new_raw;
+	return (*raw);
 }
 
 char    *get_next_line(int fd)
 {
-	static char	*buffer;
-	static int	i = 0;
-	int			readed;
+	static char	*raw = NULL;
 	char		*line;
 
-	if (!buffer)
-		buffer = malloc (BUFFER_SIZE + 1);
-	if (buffer)
-	{
-		line = NULL;
-		readed = read (fd, &buffer[i], BUFFER_SIZE - i);
-		buffer[i + readed] = '\0';
-		while (readed > 0)
-		{
-			i = 0;
-			while (buffer[i] && buffer[i] != '\n' && i < BUFFER_SIZE)
-				i++;
-			if (buffer[i] == '\n' || !buffer[i])
-			{
-				line = str_join_move_free(line, &buffer, &i);
-				if (!line)
-					return (NULL);
-				return (line);
-			}
-			else 
-			{
-				line = ft_strjoin(line, buffer);
-				readed = read (fd, &buffer[i], BUFFER_SIZE - 1);
-				if (!line || readed <= 0)
-					return (NULL);
-			}
-			i++;
-		}
-	}
-	return (line);
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	if (gnl_read(fd, &raw) && gnl_get(raw, &line) && gnl_clean(&raw))
+		return (line);
+	else if (raw)
+		return (raw);
+	return (NULL);
 }

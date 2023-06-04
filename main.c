@@ -12,7 +12,7 @@ int	main(void)
 	line = str;
 	i = 0;
 	fd = open("test.txt", O_RDONLY);
-	while (line)
+	while (i < 20)
 	{
 		line = get_next_line(fd);
 		if (!line)
