@@ -15,6 +15,29 @@ char	*ft_strchr(const char *s, int c)
 	return ((char *)s);
 }
 
+char	*ft_strdup(const char *s)
+{
+	int		i;
+	int		len;
+	char	*dup;
+
+	len = 0;
+	while (s[len])
+		len++;
+	dup = (char *) malloc (sizeof(char) * (len + 1));
+	if (dup)
+	{
+		i = 0;
+		while (*(s + i))
+		{
+			*(dup + i) = *(s + i);
+			i++;
+		}
+		*(dup + i) = '\0';
+	}
+	return (dup);
+}
+
 char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char		*sub;
