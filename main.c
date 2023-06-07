@@ -10,7 +10,7 @@ int	main(void)
 
 	i = 0;
 	fd = open("test.txt", O_RDONLY);
-	while (1)
+	while (i < 12)
 	{
 		printf ("main -- i : %d \n", i);
 		line = get_next_line(fd);

@@ -49,7 +49,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	while (s[slen])
 		slen++;
 	if (slen == 0 || slen < start)
-		return (ft_strjoin("", ""));
+		return (ft_strdup(""));
 	if (slen < start + len)
 		len = slen - start;
 	sub = (char *) malloc (sizeof(char) * (len + 1));
