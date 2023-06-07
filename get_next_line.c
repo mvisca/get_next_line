@@ -2,11 +2,9 @@
 
 static char	*gnl_free_null(char **b, char **l)
 {
-	if (*b)
-		free(*b);
+	free(*b);
 	*b = NULL;
-	if (*l)
-		free(*l);
+	free(*l);
 	*l = NULL;
 	return (NULL);
 }
@@ -20,14 +18,14 @@ static char	*gnl_read(int fd, char **raw)
 	buf = (char *) malloc (sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (gnl_free_null(raw, raw));
-	b_read = 1;
-	while (b_read > 0)
+	
+	while (1)
 	{
 		b_read = read(fd, buf, BUFFER_SIZE);
 		if (b_read == -1)
+		{
 			return (gnl_free_null(&buf, raw));
-		if (b_read == 0)
-			return (gnl_free_null(&buf, &buf));
+		}	
 		buf[b_read] = 0;
 		tmp = (*raw);
 		(*raw) = ft_strjoin(tmp, buf);
@@ -35,7 +33,7 @@ static char	*gnl_read(int fd, char **raw)
 			return (gnl_free_null(&buf, &tmp));
 		if (ft_strchr((*raw), NL) && !gnl_free_null(&buf, &tmp))
 			break ;
-		gnl_free_null(&tmp, &tmp);
+		free(tmp);	
 	}
 	return (*raw);	
 }
@@ -52,6 +50,7 @@ static char	*gnl_get(char *raw, char **line)
 		*line = ft_substr(raw, 0, line_break);
 		if (!*line)
 			return (gnl_free_null(&raw, &raw));
+		printf ("get -- line : %s", *line);
 	}
 	return (*line);
 }
@@ -69,7 +68,7 @@ static char	*gnl_clean(char **raw)
 	while ((*raw)[next_line_len + extra_line_len + 1]) 
 		extra_line_len++;
 	new_raw = ft_substr(*raw, next_line_len + 1, extra_line_len);
-	gnl_free_null(raw, raw);
+	free(*raw);
 	*raw = new_raw;
 	return (*raw);
 }
@@ -81,15 +80,11 @@ char    *get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (gnl_read(fd, &raw) && gnl_get(raw, &line) && gnl_clean(&raw))
-	{
+	gnl_read(fd, &raw);
+	gnl_get(raw, &line);
+	if (gnl_clean(&raw))
 		return (line);
-	}
 	else if (raw)
-	{
-		line = ft_strdup(raw);
-		free(raw);
-		return (line);
-	}
+		return (raw);
 	return (NULL);
 }
