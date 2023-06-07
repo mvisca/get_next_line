@@ -6,13 +6,11 @@ int	main(void)
 {
 	int		fd;
 	char	*line;
-	char	str[22] = {'H', 'e', 'l', 'l', 'o', '\n', 32, 'w', 'o', 'r', 'l', 'd', '!', '\n', 0};
 	int		i;
 
-	line = str;
 	i = 0;
 	fd = open("test.txt", O_RDONLY);
-	while (i < 12)
+	while (1)
 	{
 		printf ("main -- i : %d \n", i);
 		line = get_next_line(fd);
@@ -24,6 +22,7 @@ int	main(void)
 		free(line);
 		i ++;
 	}
+	printf ("LEAVING MAIN\n");
 	close(fd);
 	if (fd == -1)
 	{
