@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/08 13:23:24 by mvisca            #+#    #+#             */
+/*   Updated: 2023/06/08 15:25:41 by mvisca           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 static char	*gnl_read(int fd, char **raw)
@@ -13,7 +25,7 @@ static char	*gnl_read(int fd, char **raw)
 		if (bread < 0)
 			return (NULL);
 		buffer[bread] = 0;
-		*raw = ft_strjoinfree(raw, buffer);
+		*raw = ft_strjoinfree(*raw, buffer);
 		if (!*raw || ft_strchr(*raw, NL) || bread < BUFFER_SIZE)
 		{
 			free (buffer);
@@ -23,69 +35,72 @@ static char	*gnl_read(int fd, char **raw)
 	return (buffer);
 }
 
-char	*gnl_extract(char *raw)
+char	*gnl_extract(char **line, char *raw)
 {
-	char	*line;
-	int		len;
 	int		i;
+	int		end;
 
-	len = 0;
 	i = 0;
-	while (raw[len] && raw[len] != NL)
-		len++;
-	if (raw[len] == NL)
-		len++;
-	line = (char *) ft_calloc(sizeof(char) * (len + 1));
-	while (line && raw[i] && i < len)
+	if (ft_strchr(raw, NL))
+		end = ft_strchr(raw, NL) - raw + 1;
+	else
+		return (raw);
+	*line = (char *) ft_calloc(sizeof(char), (end + 1));
+	while (*line && raw[i] && i < end - 1)
 	{
-		line[i] = raw[i];
+		(*line)[i] = raw[i];
 		i++;
 	}
-	return (line);
+	if (raw[i])
+		(*line)[i++] = NL;
+	(*line)[i] = 0;
+	return (*line);
 }
 
-char	*gnl_shift(char **raw)
+char	*gnl_shift(char *raw)
 {
 	int 	len;
 	int		i;
-	char	new_raw;
+	char	*new_raw;
 
-	len = 0;
 	i = 0;
-	while (*raw[len] && *raw[len] != NL)
-		len++;
-	if (*raw[len] == NL)
-		len++;
-	new_raw = (char *) ft_calloc(sizeof(char), len + 1);
-	while (new_raw && i < len)
+	if (ft_strchr(raw, NL))
+		len = ft_strchr(raw, NL) - raw;
+	else
+		return (NULL);
+	new_raw = (char *) ft_calloc(sizeof(char), (len + 1));
+	if (!new_raw)
+		return (NULL);
+	while (raw[len + i + 1])
 	{
-		new_raw[i] == *raw[i];
+		new_raw[i] = raw[len + 1 + i];
 		i++;
 	}
-	free(*raw);
+	new_raw[i] = 0;
 	return (new_raw);
 }
-char	*get_net_line(int fd)
+
+char	*get_next_line(int fd)
 {
 	static char	*raw = NULL;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE < 1 || read (fd, raw, 0))
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (!raw || ft_strchr(raw, NL))
+	if (!raw || (raw && !ft_strchr(raw, NL)))
 	{
-		raw = gnl_read(fd, &raw);
-		if (!raw)
-			return (NULL);
-		line = gnl_extract(&raw);
-		if (!line)
-			return (NULL);
-		raw = gnl_shift(raw);
+		gnl_read(fd, &raw);
 		if (!raw)
 			return (NULL);
 	}
-	else if (ft_strchr(raw, '\0'))
+	else
 		return (raw);
-	else 
+	gnl_extract(&line, raw);
+	if (!line)
 		return (NULL);
+	raw = gnl_shift(raw);
+	printf ("gnl raw :%s'.'\n", raw);
+	printf ("gnl line:%s'.'\n", line);
+	return (line);
+	return (NULL);
 }

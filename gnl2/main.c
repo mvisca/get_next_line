@@ -18,9 +18,10 @@ int	main(void)
 	{
 		loop = 0;
 		line = get_next_line(fd);
-		if (i++ && !line)
+		if (!line)
 			break ;
-		printf("Line %d\n=== %s'\\0' ===\n", i + 1, line);
+		printf("Line %d\n=== %s'\\0' ===\n", i, line);
+		i++;
 		free(line);
 	}
 	printf ("LEAVING MAIN\n");
