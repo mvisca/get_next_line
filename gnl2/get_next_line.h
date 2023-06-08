@@ -10,12 +10,12 @@
 #  define BUFFER_SIZE 17
 # endif
 
-#define NL '\n'
-
 char	*get_next_line(int fd);
+char	*gnl_free(char *ptr);
 
 char	*ft_strjoinfree(char *s1, const char *s2);
 char	*ft_strchr(const char *s, int c);
-int     ft_strlen(const char *s);
+int     ft_strlenc(const char *s, int c);
+char    *ft_calloc(size_t nmemb, size_t size);
 
 #endif

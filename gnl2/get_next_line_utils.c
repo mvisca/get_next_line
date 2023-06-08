@@ -1,53 +1,65 @@
 #include "get_next_line.h"
 
-int	ft_strlen(const char *s)
+int	ft_strlenc(const char *s, int c)
 {
 	int	len;
 
 	len = 0;
-	while (s && s[len])
+	if (!s)
+		return (0);
+	while (s[len] != '\0' && s[len] != (unsigned char)c)
 		len++;
 	return (len);
 }
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (s && *s != (unsigned char)c)
-	{
-		if (*s && *(s + 1) == '\0')
-		{
-			if (((unsigned char)c) == '\0')
-				return ((char *)s + 1);
-			return (NULL);
-		}
-		s++;
-	}
-	return ((char *)s);
+	int	i;
+
+	i = 0;
+	while (s[i] || s[i] != (char))
+		i++;
+	if (s[i] == (char)c)
+		return (&s[i]);
+	return(NULL);
+}
+
+char    *ft_calloc(size_t nmemb, size_t size)
+{
+	char    *ptr;
+	size_t	nmembxsize;
+	size_t	i;
+
+	nmembxsize = nmemb * size;
+	if (!nmembxsize)
+		nmembxsize = 1;
+	ptr = (char *) malloc (nmembxsize);
+	i = 0;
+	while (ptr && i < nmembxsize + 1)
+		ptr[i++] = 0;
+	printf ("LEAVING FTCALLOC\n");
+	return (ptr);
 }
 
 char	*ft_strjoinfree(char *s1, const char *s2)
 {
-	int		len1;
-	int		len2;
 	int		i;
+	int		j;
 	char	*new;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	new = (char *) malloc (sizeof(char) * (len1 + len2 + 1));
-	if (!new || !s1 || !s2)
-	{
-		free(new);
+	if (!s1)
+		s1 = ft_calloc(1, 1);
+	if (!s1)
 		return (NULL);
-	}
-	new[len1 + len2] = 0;
+	new = ft_calloc (1, (ft_strlenc(s1, 0) + ft_strlenc(s2, 0) + 1));
+	if (!new)
+		return (NULL);
 	i = -1;
-	while (++i < len1)
-		*(new + i) = *(s1 + i);
-	i--;
-	while (++i - len1 < len2)
-		*(new + i) = *(s2 + (i - len1));
+	while (s1[++i])
+		new[i] = s1[i];
+	j = 0;
+	while (s2[j])
+		new[i++] = s2[j++];
 	*(new + i) = '\0';
-	free(s1);
 	return (new);
 }
