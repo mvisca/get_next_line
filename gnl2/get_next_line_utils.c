@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/09 12:33:58 by mvisca-g          #+#    #+#             */
+/*   Updated: 2023/06/09 18:40:27 by mvisca-g         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 int	ft_strlenc(const char *s, int c)
@@ -17,10 +29,10 @@ char	*ft_strchr(const char *s, int c)
 	int	i;
 
 	i = 0;
-	while (s[i] || s[i] != (char))
+	while (s && (s[i] || s[i] != (char)c))
 		i++;
-	if (s[i] == (char)c)
-		return (&s[i]);
+	if (s && s[i] == (char)c)
+		return (&((char *)s)[i]);
 	return(NULL);
 }
 
@@ -35,9 +47,8 @@ char    *ft_calloc(size_t nmemb, size_t size)
 		nmembxsize = 1;
 	ptr = (char *) malloc (nmembxsize);
 	i = 0;
-	while (ptr && i < nmembxsize + 1)
+	while (ptr && i < nmembxsize)
 		ptr[i++] = 0;
-	printf ("LEAVING FTCALLOC\n");
 	return (ptr);
 }
 
