@@ -19,7 +19,7 @@ int	ft_strlenc(const char *s, int c)
 	len = 0;
 	if (!s)
 		return (0);
-	while (s[len] != '\0' && s[len] != (unsigned char)c)
+	while (s && s[len] != '\0' && s[len] != (unsigned char)c)
 		len++;
 	return (len);
 }
