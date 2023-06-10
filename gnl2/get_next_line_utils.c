@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:33:58 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/09 18:40:27 by mvisca-g         ###   ########.fr       */
+/*   Updated: 2023/06/10 15:35:18 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*ft_strchr(const char *s, int c)
 	int	i;
 
 	i = 0;
-	while (s && (s[i] || s[i] != (char)c))
+	while (s && s[i] && s[i] != (char)c)
 		i++;
 	if (s && s[i] == (char)c)
 		return (&((char *)s)[i]);
@@ -72,5 +72,6 @@ char	*ft_strjoinfree(char *s1, const char *s2)
 	while (s2[j])
 		new[i++] = s2[j++];
 	*(new + i) = '\0';
+	free(s1);
 	return (new);
 }
