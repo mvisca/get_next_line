@@ -6,7 +6,7 @@
 /*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:33:58 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/10 15:35:18 by mvisca           ###   ########.fr       */
+/*   Updated: 2023/06/10 20:55:33 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,24 @@ char	*ft_strchr(const char *s, int c)
 	return(NULL);
 }
 
-char    *ft_calloc(size_t nmemb, size_t size)
+void	*ft_calloc(size_t n, size_t s)
 {
-	char    *ptr;
-	size_t	nmembxsize;
 	size_t	i;
+	size_t	t;
+	void	*buf;
 
-	nmembxsize = nmemb * size;
-	if (!nmembxsize)
-		nmembxsize = 1;
-	ptr = (char *) malloc (nmembxsize);
-	i = 0;
-	while (ptr && i < nmembxsize)
-		ptr[i++] = 0;
-	return (ptr);
+	if (n * s == 0)
+		t = 1;
+	else
+		t = n * s;
+	buf = malloc(t);
+	if (buf)
+	{
+		i = -1;
+		while (++i < t)
+			((char *)buf)[i] = K_ES;
+	}
+	return (buf);
 }
 
 char	*ft_strjoinfree(char *s1, const char *s2)
@@ -59,19 +63,22 @@ char	*ft_strjoinfree(char *s1, const char *s2)
 	char	*new;
 
 	if (!s1)
-		s1 = ft_calloc(1, 1);
-	if (!s1)
-		return (NULL);
-	new = ft_calloc (1, (ft_strlenc(s1, 0) + ft_strlenc(s2, 0) + 1));
-	if (!new)
-		return (NULL);
-	i = -1;
-	while (s1[++i])
-		new[i] = s1[i];
-	j = 0;
-	while (s2[j])
-		new[i++] = s2[j++];
-	*(new + i) = '\0';
-	free(s1);
-	return (new);
+    {
+		s1 = malloc (1);
+        if (!s1)
+		    return (NULL);
+	    *s1 = K_ES;
+    }
+    new = malloc ((ft_strlenc(s1, K_ES) + ft_strlenc(s2, K_ES) + 1));
+    if (!new)
+        return (NULL);
+    i = -1;
+    while (s1[++i])
+        new[i] = s1[i];
+    j = 0;
+    while (s2[j])
+        new[i++] = s2[j++];
+    new[i] = K_ES;
+    free(s1);
+    return (new);
 }

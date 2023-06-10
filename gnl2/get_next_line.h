@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:33:58 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/09 14:51:49 by mvisca-g         ###   ########.fr       */
+/*   Updated: 2023/06/10 20:55:06 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@
 # endif
 
 # define NL '\n'
+# define K_ES '\0'
 
 char	*get_next_line(int fd);
-char	*gnl_free(char *ptr);
 
 char	*ft_strjoinfree(char *s1, const char *s2);
 char	*ft_strchr(const char *s, int c);
 int     ft_strlenc(const char *s, int c);
-char    *ft_calloc(size_t nmemb, size_t size);
+void    *ft_calloc(size_t n, size_t s);
 
 #endif
