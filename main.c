@@ -7,25 +7,28 @@ int	main(void)
 	int		fd;
 	char	*line;
 	int		i;
-	int		loop;
 
 	i = 0;
-	loop = 1;
+	line = NULL;
 	fd = open("test.txt", O_RDONLY);
 	if (fd == -1 && printf ("Open file: error\n")) 
 		return (1);
-	while (loop)
+	while (!line)
 	{
 		printf ("LOOP MAIN\n");
-		loop = 0;
 		line = get_next_line(fd);
 		if (!line)
 			break ;
 		printf("Line %d\n=== %s'\\0' ===\n", i, line);
 		i++;
-		free(line);
+		if (line)
+		{
+			free(line);
+			line = NULL;
+		}
+		else
+			break;
 	}
-	printf ("LEAVING MAIN\n");
 	close(fd);
 	return (0);
 }
