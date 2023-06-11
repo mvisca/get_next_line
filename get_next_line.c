@@ -6,7 +6,7 @@
 /*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 20:17:35 by mvisca            #+#    #+#             */
-/*   Updated: 2023/06/11 12:46:30 by mvisca           ###   ########.fr       */
+/*   Updated: 2023/06/11 16:31:27 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // K_NL (NewLine) '\n'
 // K_ES (EndString) '\0'
 
-static char	*free_null(char *buf)
+char	*free_null(char *buf)
 {
 	free(buf);
 	buf = NULL;
@@ -37,14 +37,16 @@ static char	*read_fd(int fd, char *raw)
 		if (bytes_r == -1)
 		{
 			free(buf);
-			if (raw)
-				free(raw);
+			buf = NULL;
+			free(raw);
+			raw = NULL;
 			return (NULL);
 		}
 		buf[bytes_r] = K_ES;
 		raw = ft_strjoin_and_free(raw, buf);
 	}
 	free(buf);
+	buf = NULL;
 	return (raw);
 }
 
@@ -54,7 +56,7 @@ static char	*split_raw(char *raw)
 	int		len;
 	int		i;
 
-	if (!raw || raw[0] == K_ES)
+	if (raw[0] == K_ES)
 		return (NULL);
 	len = ft_strlenc(raw, K_NL);
 	if (raw[len] == K_NL)
@@ -78,16 +80,23 @@ static char	*update_raw(char *raw)
 
 	start = ft_strlenc(raw, K_NL);
 	if (!raw[start])
-		return (free_null(raw));
+	{
+		free(raw);
+		return (NULL);
+	}
 	end = ft_strlenc(raw, K_ES);
 	new_raw = (char *) malloc(sizeof(char) * (end - start + 1));
 	if (!new_raw)
-		return (free_null(raw));
+	{
+		free(raw);
+		return (NULL);
+	}
 	j = -1;
 	while (raw[start + 1 + ++j])
 		new_raw[j] = raw[start + 1 + j];
 	new_raw[j] = K_ES;
 	free(raw);
+	raw = NULL;
 	return (new_raw);
 }
 
@@ -115,4 +124,3 @@ char	*get_next_line(int fd)
 	raw = update_raw(raw);
 	return (line);
 }
-

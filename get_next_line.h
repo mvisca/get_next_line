@@ -14,9 +14,9 @@
 # define K_ES '\0'
 
 char    *get_next_line(int fd);
-
-int     ft_strlenc(const char *s, int c);
-char    *ft_strchr(const char *s, int c);
-char    *ft_strjoin_and_free(char *s1, const char *s2);
+char    *free_null(char *buf);
+int		ft_strlenc(const char *s, int c);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin_and_free(char *s1, const char *s2);
 
 #endif

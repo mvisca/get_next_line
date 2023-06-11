@@ -6,7 +6,7 @@
 /*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:33:58 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/10 18:31:28 by mvisca           ###   ########.fr       */
+/*   Updated: 2023/06/11 16:33:37 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*ft_strchr(const char *s, int c)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	while (s && s[i] && s[i] != (char)c)
 		i++;
 	if (s && s[i] == (char)c)
@@ -49,9 +51,9 @@ char	*ft_strjoin_and_free(char *s1, const char *s2)
 		    return (NULL);
 	    *s1 = K_ES;
     }
-    new = malloc ((ft_strlenc(s1, K_ES) + ft_strlenc(s2, K_ES) + 1));
+    new = (char *) malloc ((ft_strlenc(s1, K_ES) + ft_strlenc(s2, K_ES) + 1));
     if (!new)
-        return (NULL);
+        return (free_null(s1));
     i = -1;
     while (s1[++i])
         new[i] = s1[i];
