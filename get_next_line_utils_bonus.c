@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/09 12:33:58 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/11 19:57:28 by mvisca-g         ###   ########.fr       */
+/*   Created: 2023/06/11 21:06:41 by mvisca-g          #+#    #+#             */
+/*   Updated: 2023/06/11 21:32:45 by mvisca-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*free_null(char *buf)
 {

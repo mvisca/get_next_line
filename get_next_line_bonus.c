@@ -1,19 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/10 20:17:35 by mvisca            #+#    #+#             */
-/*   Updated: 2023/06/11 19:57:21 by mvisca-g         ###   ########.fr       */
+/*   Created: 2023/06/11 21:10:11 by mvisca-g          #+#    #+#             */
+/*   Updated: 2023/06/11 21:46:58 by mvisca-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-// K_NL (NewLine) '\n'
-// K_ES (EndString) '\0'
+static char *free_null_all(char *buf[256])
+{
+	int	i;
+
+	i = 0;
+	while (i < FOPEN_MAX)
+	{
+		if (buf[i])
+		{
+			free(buf[i]);
+			buf[i] = NULL;
+		}
+		i++;
+	}
+	return (NULL);
+}
 
 static char	*read_fd(int fd, char *raw)
 {
@@ -95,23 +109,23 @@ static char	*update_raw(char *raw)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*raw = NULL;
+	static char	*raw[256];
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 	{
-		free(raw);
+		free_null_all(raw);
 		return (NULL);
 	}
-	if (!raw || (!ft_strchr(raw, K_NL)))
-		raw = read_fd(fd, raw);
-	if (!raw)
+	if (!raw[fd] || (!ft_strchr(raw[fd], K_NL)))
+		raw[fd] = read_fd(fd, raw[fd]);
+	if (!raw[fd])
 		return (NULL);
-	line = split_raw(raw);
+	line = split_raw(raw[fd]);
 	if (!line)
 	{
-		raw = free_null(raw);
+		raw[fd] = free_null(raw[fd]);
 		return (NULL);
 	}
-	raw = update_raw(raw);
+	raw[fd] = update_raw(raw[fd]);
 	return (line);
 }
