@@ -6,7 +6,7 @@
 /*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 20:17:35 by mvisca            #+#    #+#             */
-/*   Updated: 2023/06/11 12:28:07 by mvisca           ###   ########.fr       */
+/*   Updated: 2023/06/11 12:46:30 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,23 +65,21 @@ static char	*split_raw(char *raw)
 	i = -1;
 	while (++i < len)
 		line[i] = raw[i];
-	if (raw[i] == K_NL)
-		line[i++] = K_NL;
 	line[i] = K_ES;
 	return (line);
 }
 
 static char	*update_raw(char *raw)
 {
-	int		end;
-	int		start;
 	char	*new_raw;
+	int		start;
+	int		end;
 	int		j;
 
-	end = ft_strlenc(raw, K_ES);
 	start = ft_strlenc(raw, K_NL);
 	if (!raw[start])
 		return (free_null(raw));
+	end = ft_strlenc(raw, K_ES);
 	new_raw = (char *) malloc(sizeof(char) * (end - start + 1));
 	if (!new_raw)
 		return (free_null(raw));
@@ -99,7 +97,6 @@ char	*get_next_line(int fd)
 	static char	*raw = NULL;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
-//		return (free_null(raw));
 	{
 		free(raw);
 		return (NULL);
