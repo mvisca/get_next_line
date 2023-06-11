@@ -6,7 +6,7 @@
 /*   By: mvisca <mvisca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 20:17:35 by mvisca            #+#    #+#             */
-/*   Updated: 2023/06/10 20:27:04 by mvisca           ###   ########.fr       */
+/*   Updated: 2023/06/11 12:25:53 by mvisca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 // K_NL (NewLine) '\n'
 // K_ES (EndString) '\0'
 
-static char	*free_and_say_null(char *free_me)
+static char	*free_null(char *buf)
 {
-	free(free_me);
+	free(buf);
+	buf = NULL;
 	return (NULL);
 }
 
@@ -27,21 +28,23 @@ static char	*read_fd(int fd, char *raw)
 	int		bytes_r;
 	
 	bytes_r = 1;
-	if (ft_strchr(raw, K_NL))
-		return (raw);
-	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buf = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
-		return (free_and_say_null(raw));
-	while (bytes_r > 0 && !ft_strchr(raw, K_NL))
+		return (free_null(raw));
+	while (bytes_r > 0 && !(ft_strchr(raw, K_NL)))
 	{
 		bytes_r = read (fd, buf, BUFFER_SIZE);
 		if (bytes_r == -1)
-			return (free_and_say_null(buf));
-		buf[bytes_r] = 0;
+		{
+			free(buf);
+			if (raw)
+				free(raw);
+			return (NULL);
+		}
+		buf[bytes_r] = K_ES;
 		raw = ft_strjoin_and_free(raw, buf);
-		if (!raw)
-			return (free_and_say_null(buf));
 	}
+	free(buf);
 	return (raw);
 }
 
@@ -51,37 +54,42 @@ static char	*split_raw(char *raw)
 	int		len;
 	int		i;
 
+	if (!raw || raw[0] == K_ES)
+		return (NULL);
 	len = ft_strlenc(raw, K_NL);
 	if (raw[len] == K_NL)
 		len++;
-	line = malloc(sizeof(char) * len + 1);
+	line = (char *) malloc(sizeof(char) * (len + 1));
 	if (!line)
 		return (NULL);
 	i = -1;
 	while (++i < len)
 		line[i] = raw[i];
+	if (raw[i] == K_NL)
+		line[i++] = K_NL;
 	line[i] = K_ES;
 	return (line);
 }
 
 static char	*update_raw(char *raw)
 {
-	char	*new_raw;
-	int		start;
 	int		end;
+	int		start;
+	char	*new_raw;
 	int		j;
 
-	if (!ft_strchr(raw, K_NL))
-		return (raw);
-	start = ft_strlenc(raw, K_NL) + 1;
 	end = ft_strlenc(raw, K_ES);
-	new_raw = malloc(sizeof(char) * (end - start));
+	start = ft_strlenc(raw, K_NL);
+	if (!raw[start])
+		return (free_null(raw));
+	new_raw = (char *) malloc(sizeof(char) * (end - start + 1));
 	if (!new_raw)
-		return (NULL);
+		return (free_null(raw));
 	j = -1;
-	while (start + ++j < end)
-		new_raw[j] = raw[start + j];
+	while (raw[start + 1 + ++j])
+		new_raw[j] = raw[start + 1 + j];
 	new_raw[j] = K_ES;
+	free(raw);
 	return (new_raw);
 }
 
@@ -90,21 +98,24 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*raw = NULL;
 
-    line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1)
+//		return (free_null(raw));
+	{
+		free(raw);
 		return (NULL);
+	}
 	if (!raw || (!ft_strchr(raw, K_NL)))
-		return (NULL);
-	raw = read_fd(fd, raw);
+		raw = read_fd(fd, raw);
 	if (!raw)
 		return (NULL);
-	if (ft_strchr(raw, K_NL))
-		line = split_raw(raw);
+	line = split_raw(raw);
 	if (!line)
-		return (free_and_say_null(raw));
+	{
+		free(raw);
+		raw = NULL;
+		return (NULL);
+	}
 	raw = update_raw(raw);
-	if (!raw)
-		return (free_and_say_null(line));
 	return (line);
 }
 
