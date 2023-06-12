@@ -6,18 +6,18 @@
 /*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:10:11 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/11 21:46:58 by mvisca-g         ###   ########.fr       */
+/*   Updated: 2023/06/12 18:10:37 by mvisca-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char *free_null_all(char *buf[256])
+static char	*free_null_all(char *buf[256])
 {
 	int	i;
 
 	i = 0;
-	while (i < FOPEN_MAX)
+	while (i < 256)
 	{
 		if (buf[i])
 		{

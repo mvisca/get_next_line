@@ -6,12 +6,12 @@
 /*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 19:32:11 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/11 21:46:28 by mvisca-g         ###   ########.fr       */
+/*   Updated: 2023/06/12 18:21:43 by mvisca-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
 # include <fcntl.h>
@@ -22,8 +22,13 @@
 #  define BUFFER_SIZE 2
 # endif
 
-# define K_NL '\n'
-# define K_ES 0
+# ifndef K_NL
+#  define K_NL '\n'
+# endif
+
+# ifndef K_ES
+#  define K_ES 0
+# endif
 
 char	*get_next_line(int fd);
 char	*free_null(char *buf);
