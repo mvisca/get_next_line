@@ -6,7 +6,7 @@
 /*   By: mvisca-g <mvisca-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:06:41 by mvisca-g          #+#    #+#             */
-/*   Updated: 2023/06/11 21:32:45 by mvisca-g         ###   ########.fr       */
+/*   Updated: 2023/06/12 18:39:45 by mvisca-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ char	*ft_strjoin_and_free(char *s1, const char *s2)
 		s1 = malloc (1);
 		if (!s1)
 			return (NULL);
-		*s1 = K_ES;
+		*s1 = 0;
 	}
-	new = (char *) malloc ((ft_strlenc(s1, K_ES) + ft_strlenc(s2, K_ES) + 1));
+	new = (char *) malloc ((ft_strlenc(s1, 0) + ft_strlenc(s2, 0) + 1));
 	if (!new && !free_null(s1))
 		return (NULL);
 	i = -1;
@@ -67,7 +67,7 @@ char	*ft_strjoin_and_free(char *s1, const char *s2)
 	j = 0;
 	while (s2[j])
 		new[i++] = s2[j++];
-	new[i] = K_ES;
+	new[i] = 0;
 	s1 = free_null(s1);
 	return (new);
 }
